@@ -14,7 +14,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * This class represents a Rockstar.
  * Each Rockstar have a full name, a status and a picture.
  */
-public class Rockstar implements Parcelable {
+public class Rockstar {
 
     private String firstName;
 
@@ -56,6 +56,10 @@ public class Rockstar implements Parcelable {
         return firstName;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLastName() {
         return lastName;
     }
@@ -110,42 +114,5 @@ public class Rockstar implements Parcelable {
             bookmark = 1;
         else
             bookmark = 0;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel destination, int flags) {
-        destination.writeString(this.firstName);
-        destination.writeString(this.lastName);
-        destination.writeString(this.status);
-        destination.writeParcelable(this.photo,flags);
-        destination.writeInt(bookmark);
-    }
-
-    /**
-     *
-     */
-    public static final Parcelable.Creator<Rockstar> CREATOR = new Parcelable.Creator<Rockstar>() {
-        @Override
-        public Rockstar createFromParcel(Parcel source) {
-            return new Rockstar(source);
-        }
-
-        @Override
-        public Rockstar[] newArray(int size) {
-            return new Rockstar[size];
-        }
-    };
-
-    private Rockstar(Parcel src) {
-        this.firstName = src.readString();
-        this.lastName = src.readString();
-        this.status = src.readString();
-        this.photo = (Bitmap)src.readParcelable(Bitmap.class.getClassLoader());
-        this.bookmark = src.readInt();
     }
 }
