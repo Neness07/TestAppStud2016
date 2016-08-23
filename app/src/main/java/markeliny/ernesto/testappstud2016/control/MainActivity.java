@@ -51,7 +51,9 @@ public class MainActivity extends AppCompatActivity implements IObserver, IContr
 
         mTabLayout.setupWithViewPager(mViewPager);
 
-        //Essai d'une technique mais ça ne fonctionne pas: A REVOIR
+        //Essai d'une technique pour mettre à jour les fragments suite au changement du model
+        // mais ça ne fonctionne pas:
+        // A REVOIR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //Notion manquante: MAJ automatique des Fragment depuis ACTIVITY
         mFragments = new IFragmentCallBack[2];
         mFragments[0] = (IFragmentCallBack) mPagerAdapter.getItem(0);
@@ -63,7 +65,9 @@ public class MainActivity extends AppCompatActivity implements IObserver, IContr
     @Override
     public void rockstarListHasChanged(RockstarsChangedEvent evt) {
 
-        //Essai d'une technique mais ça ne fonctionne pas: A REVOIR
+        //Essai d'une technique pour mettre à jour les fragments suite au changement du model
+        // mais ça ne fonctionne pas:
+        // A REVOIR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //Notion manquante: MAJ automatique des Fragment depuis ACTIVITY
         rockstarsModel = new Rockstars(evt.getNewListRockstar());
         mFragments[0].update(rockstarsModel.getRockstars());
