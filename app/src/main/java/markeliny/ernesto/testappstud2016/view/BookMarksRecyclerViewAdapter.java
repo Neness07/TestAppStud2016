@@ -1,4 +1,4 @@
-package markeliny.ernesto.testappstud2016.model.adapter;
+package markeliny.ernesto.testappstud2016.view;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;

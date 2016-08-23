@@ -45,7 +45,7 @@ public class Rockstar {
         this.status = status;
         this.hisFace = hisFace;
         this.setPhoto(null);
-        this.bookmark = 0;
+        this.bookmark = 1;
     }
 
     /**

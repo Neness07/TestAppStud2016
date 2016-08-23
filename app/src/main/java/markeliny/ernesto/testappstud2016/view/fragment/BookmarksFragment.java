@@ -16,8 +16,7 @@ import java.util.List;
 import markeliny.ernesto.testappstud2016.R;
 import markeliny.ernesto.testappstud2016.control.RockstarsSingleton;
 import markeliny.ernesto.testappstud2016.model.Rockstar;
-import markeliny.ernesto.testappstud2016.model.Rockstars;
-import markeliny.ernesto.testappstud2016.model.adapter.BookMarksRecyclerViewAdapter;
+import markeliny.ernesto.testappstud2016.view.BookMarksRecyclerViewAdapter;
 
 
 /**

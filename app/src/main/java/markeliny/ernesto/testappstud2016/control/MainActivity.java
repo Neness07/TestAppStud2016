@@ -10,13 +10,14 @@ import android.support.v7.widget.Toolbar;
 
 
 import markeliny.ernesto.testappstud2016.R;
+import markeliny.ernesto.testappstud2016.model.Rockstar;
 import markeliny.ernesto.testappstud2016.model.Rockstars;
 import markeliny.ernesto.testappstud2016.model.adapter.MyPagerAdapter;
 import markeliny.ernesto.testappstud2016.view.IObserver;
 import markeliny.ernesto.testappstud2016.view.RockstarsChangedEvent;
 import markeliny.ernesto.testappstud2016.view.fragment.IFragmentCallBack;
 
-public class MainActivity extends AppCompatActivity implements IObserver{
+public class MainActivity extends AppCompatActivity implements IObserver, IControllerCallBack{
 
     private Rockstars rockstarsModel;
 
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements IObserver{
 
         mTabLayout.setupWithViewPager(mViewPager);
 
+        //Essai d'une technique mais ça ne fonctionne pas: A REVOIR
+        //Notion manquante: MAJ automatique des Fragment depuis ACTIVITY
         mFragments = new IFragmentCallBack[2];
         mFragments[0] = (IFragmentCallBack) mPagerAdapter.getItem(0);
         mFragments[1] = (IFragmentCallBack) mPagerAdapter.getItem(1);
@@ -59,8 +62,21 @@ public class MainActivity extends AppCompatActivity implements IObserver{
 
     @Override
     public void rockstarListHasChanged(RockstarsChangedEvent evt) {
+
+        //Essai d'une technique mais ça ne fonctionne pas: A REVOIR
+        //Notion manquante: MAJ automatique des Fragment depuis ACTIVITY
         rockstarsModel = new Rockstars(evt.getNewListRockstar());
         mFragments[0].update(rockstarsModel.getRockstars());
         mFragments[1].update(rockstarsModel.getRockstars());
+    }
+
+
+    @Override
+    public void onRockStarSelected(Rockstar rockstar, boolean status) {
+        if (status){
+            rockstarsModel.addToBookmarks(rockstar);
+        } else {
+            rockstarsModel.removeFromBookmarks(rockstar);
+        }
     }
 }

@@ -1,8 +1,8 @@
-package markeliny.ernesto.testappstud2016.model.adapter;
+package markeliny.ernesto.testappstud2016.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,7 +11,7 @@ import markeliny.ernesto.testappstud2016.R;
 /**
  * Created by Neness on 23/08/2016.
  */
-public class BookMarkVIewHolder extends RecyclerView.ViewHolder {
+public class RockStarViewHolder extends RecyclerView.ViewHolder {
 
     private ImageView imageView;
 
@@ -19,14 +19,15 @@ public class BookMarkVIewHolder extends RecyclerView.ViewHolder {
 
     private TextView status;
 
-    private Button delBtn;
+    private CheckBox cb;
 
-    public BookMarkVIewHolder(View itemView) {
+
+    public RockStarViewHolder(View itemView) {
         super(itemView);
         imageView = (ImageView) itemView.findViewById(R.id.id_img_view);
         fullName = (TextView) itemView.findViewById(R.id.id_text_name);
         status = (TextView) itemView.findViewById(R.id.id_text_status);
-        //ICI POUR le bouton poubelle(suppression) de l'item de bookmarks
+        cb = (CheckBox) itemView.findViewById(R.id.id_checkbox);
     }
 
     public ImageView getImageView() {
@@ -41,7 +42,7 @@ public class BookMarkVIewHolder extends RecyclerView.ViewHolder {
         return status;
     }
 
-    public Button getDelBtn() {
-        return delBtn;
+    public CheckBox getCheckBox() {
+        return cb;
     }
 }

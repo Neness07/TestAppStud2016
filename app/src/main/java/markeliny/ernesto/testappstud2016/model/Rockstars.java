@@ -76,6 +76,7 @@ public class Rockstars{
     public void addToBookmarks(Rockstar r){
         if (r != null){
             r.setBookmark(true);
+            notifyAllObservers();
         }
     }
 
@@ -86,6 +87,7 @@ public class Rockstars{
     public void removeFromBookmarks(Rockstar r){
         if (r != null){
             r.setBookmark(false);
+            notifyAllObservers();
         }
     }
     /*

@@ -14,10 +14,10 @@ import android.widget.LinearLayout;
 import java.util.List;
 
 import markeliny.ernesto.testappstud2016.R;
+import markeliny.ernesto.testappstud2016.control.IControllerCallBack;
 import markeliny.ernesto.testappstud2016.control.RockstarsSingleton;
 import markeliny.ernesto.testappstud2016.model.Rockstar;
-import markeliny.ernesto.testappstud2016.model.Rockstars;
-import markeliny.ernesto.testappstud2016.model.adapter.RockStarsRecyclerViewAdapter;
+import markeliny.ernesto.testappstud2016.view.RockStarsRecyclerViewAdapter;
 
 /**
  * Created by Neness on 22/08/2016.
@@ -27,6 +27,8 @@ public class RockstarsFragment extends Fragment implements IFragmentCallBack{
     private Context mContext;
 
     private List<Rockstar> rockstarList;
+
+    private IControllerCallBack ctrl;
 
     public RockstarsFragment() {}
 
@@ -40,6 +42,7 @@ public class RockstarsFragment extends Fragment implements IFragmentCallBack{
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+        ctrl = (IControllerCallBack) context;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class RockstarsFragment extends Fragment implements IFragmentCallBack{
         ll = (LinearLayout) inflater.inflate(R.layout.rockstars_fragment, container, false);
         rv = (RecyclerView) ll.findViewById(R.id.id_recyclerView_rockstars);
         rv.setLayoutManager(new LinearLayoutManager(mContext));
-        rv.setAdapter(new RockStarsRecyclerViewAdapter(rockstarList));
+        rv.setAdapter(new RockStarsRecyclerViewAdapter(rockstarList, ctrl));
         return ll;
     }
 
