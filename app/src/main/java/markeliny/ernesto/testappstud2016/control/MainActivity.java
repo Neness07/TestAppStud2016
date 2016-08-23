@@ -12,15 +12,18 @@ import android.support.v7.widget.Toolbar;
 import markeliny.ernesto.testappstud2016.R;
 import markeliny.ernesto.testappstud2016.model.Rockstars;
 import markeliny.ernesto.testappstud2016.model.adapter.MyPagerAdapter;
+import markeliny.ernesto.testappstud2016.view.IObserver;
+import markeliny.ernesto.testappstud2016.view.RockstarsChangedEvent;
+import markeliny.ernesto.testappstud2016.view.fragment.IFragmentCallBack;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IObserver{
 
     private Rockstars rockstarsModel;
 
     private ViewPager mViewPager;
     private MyPagerAdapter mPagerAdapter;
     private TabLayout mTabLayout;
-    private Toolbar mToolBar;
+    private IFragmentCallBack[] mFragments;
 
 
     @Override
@@ -29,10 +32,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Model init
         rockstarsModel = new Rockstars(RockstarsSingleton.getInstance().getRockStarsList());
+        rockstarsModel.addAnObserver(this);
 
         mTabLayout = (TabLayout) findViewById(R.id.id_tabLayout);
         mViewPager = (ViewPager)findViewById(R.id.id_viewpager);
-        //mToolBar = (Toolbar) findViewById(R.id.id_toolBar);
 
 
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(false);
@@ -47,6 +50,17 @@ public class MainActivity extends AppCompatActivity {
 
         mTabLayout.setupWithViewPager(mViewPager);
 
+        mFragments = new IFragmentCallBack[2];
+        mFragments[0] = (IFragmentCallBack) mPagerAdapter.getItem(0);
+        mFragments[1] = (IFragmentCallBack) mPagerAdapter.getItem(1);
+        mFragments[0].update(rockstarsModel.getRockstars());
+        mFragments[1].update(rockstarsModel.getRockstars());
+    }
 
+    @Override
+    public void rockstarListHasChanged(RockstarsChangedEvent evt) {
+        rockstarsModel = new Rockstars(evt.getNewListRockstar());
+        mFragments[0].update(rockstarsModel.getRockstars());
+        mFragments[1].update(rockstarsModel.getRockstars());
     }
 }

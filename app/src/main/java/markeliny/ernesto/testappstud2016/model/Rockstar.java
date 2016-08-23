@@ -115,4 +115,8 @@ public class Rockstar {
         else
             bookmark = 0;
     }
+    @Override
+    public String toString(){
+        return firstName + " " + lastName;
+    }
 }
