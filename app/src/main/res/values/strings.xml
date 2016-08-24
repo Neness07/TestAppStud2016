@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">TestAPPSTUD2016</string>
     <string name="add_to_bookmarks"> Add to bookmarks</string>
+    <string name="action_search">search</string>
+    <string name="refresh_menu">refresh menu</string>
 
 </resources>

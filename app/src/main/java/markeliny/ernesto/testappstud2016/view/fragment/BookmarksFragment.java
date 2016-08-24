@@ -14,52 +14,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 import markeliny.ernesto.testappstud2016.R;
+import markeliny.ernesto.testappstud2016.control.IActivityController;
 import markeliny.ernesto.testappstud2016.control.RockstarsSingleton;
 import markeliny.ernesto.testappstud2016.model.Rockstar;
-import markeliny.ernesto.testappstud2016.view.BookMarksRecyclerViewAdapter;
+import markeliny.ernesto.testappstud2016.model.adapter.BookMarksRecyclerViewAdapter;
+import markeliny.ernesto.testappstud2016.view.FragmentView;
 
 
 /**
  * Created by Neness on 22/08/2016.
  */
-public class BookmarksFragment extends Fragment implements IFragmentCallBack {
+public class BookmarksFragment extends Fragment implements FragmentView {
 
-    private Context mContext;
-
-    private List<Rockstar> rockstarList ;
+    protected Context mContext;
+    protected RecyclerView mRecyclerView;
+    protected List<Rockstar> mRockstarList;
+    protected IActivityController mController;
+    private BookMarksRecyclerViewAdapter mAdapter;
 
     public BookmarksFragment() {}
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        rockstarList = RockstarsSingleton.getInstance().getRockStarsList();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView mRecyclerView;
+        mContext = getContext();
+        mController = (IActivityController) mContext;
+        mController.registerView(this);
         mRecyclerView = (RecyclerView) inflater.inflate(R.layout.bookmarks_fragment, container, false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        List<Rockstar> bookmarks = new ArrayList<>();
-        for(Rockstar r: rockstarList){
-            if (r.isBookmark()){
-                bookmarks.add(r);
-            }
-        }
-        mRecyclerView.setAdapter(new BookMarksRecyclerViewAdapter(bookmarks));
+        mRockstarList = mController.getRockStarListFromModel();
+        mAdapter = new BookMarksRecyclerViewAdapter(this.getBookMarks());
+        mRecyclerView.setAdapter(mAdapter);
         return mRecyclerView;
     }
 
     @Override
-    public void update(List<Rockstar> aRockStarList) {
-        rockstarList = aRockStarList;
+    public void updateFragmentView(List<Rockstar> rockstars) {
+        mRockstarList = rockstars;
+        mAdapter.updateAdaptedList(this.getBookMarks());
+    }
+
+    private List<Rockstar> getBookMarks(){
+        List<Rockstar> bookmarks = new ArrayList<>();
+        for(Rockstar r: mRockstarList){
+            if (r.isBookmark()){
+                bookmarks.add(r);
+            }
+        }
+        return bookmarks;
     }
 }

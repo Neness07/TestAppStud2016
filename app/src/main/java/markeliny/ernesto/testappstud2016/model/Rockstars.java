@@ -1,12 +1,9 @@
 package markeliny.ernesto.testappstud2016.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import markeliny.ernesto.testappstud2016.view.IObserver;
+import markeliny.ernesto.testappstud2016.view.ModelObserver;
 import markeliny.ernesto.testappstud2016.view.RockstarsChangedEvent;
 
 /**
@@ -24,7 +21,7 @@ public class Rockstars{
     /*
      * List of the view which will be updated when this model changes
      */
-    private List<IObserver> observers;
+    private List<ModelObserver> observers;
 
     /*
      *
@@ -57,7 +54,7 @@ public class Rockstars{
      * Add an observer to the observer list
      * @param obs
      */
-    public void addAnObserver(IObserver obs){
+    public void addAnObserver(ModelObserver obs){
         observers.add(obs);
     }
 
@@ -65,7 +62,7 @@ public class Rockstars{
      * remove an observer from the observer list
      * @param obs
      */
-    public void removeAnObserver(IObserver obs){
+    public void removeAnObserver(ModelObserver obs){
         observers.remove(obs);
     }
 
@@ -94,8 +91,8 @@ public class Rockstars{
      * updates the observers
      */
     private void notifyAllObservers(){
-        for (IObserver o: observers) {
-            o.rockstarListHasChanged(new RockstarsChangedEvent(this, rockstars));
+        for (ModelObserver o: observers) {
+            o.rockstarsChanged(new RockstarsChangedEvent(this, rockstars));
         }
     }
 }

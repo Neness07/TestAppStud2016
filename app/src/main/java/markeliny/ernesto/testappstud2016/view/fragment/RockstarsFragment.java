@@ -2,63 +2,169 @@ package markeliny.ernesto.testappstud2016.view.fragment;
 
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import markeliny.ernesto.testappstud2016.R;
-import markeliny.ernesto.testappstud2016.control.IControllerCallBack;
-import markeliny.ernesto.testappstud2016.control.RockstarsSingleton;
+import markeliny.ernesto.testappstud2016.control.IActivityController;
 import markeliny.ernesto.testappstud2016.model.Rockstar;
-import markeliny.ernesto.testappstud2016.view.RockStarsRecyclerViewAdapter;
+import markeliny.ernesto.testappstud2016.model.adapter.RockStarsRecyclerViewAdapter;
+import markeliny.ernesto.testappstud2016.view.FragmentView;
 
 /**
  * Created by Neness on 22/08/2016.
  */
-public class RockstarsFragment extends Fragment implements IFragmentCallBack{
+public class RockstarsFragment extends Fragment implements SearchView.OnQueryTextListener,
+        FragmentView{
 
-    private Context mContext;
-
-    private List<Rockstar> rockstarList;
-
-    private IControllerCallBack ctrl;
+    protected Context mContext;
+    protected RecyclerView mRecyclerView;
+    protected List<Rockstar> mRockstarList;
+    protected IActivityController mController;
+    private RockStarsRecyclerViewAdapter mAdapter;
 
     public RockstarsFragment() {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        rockstarList = RockstarsSingleton.getInstance().getRockStarsList();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-        ctrl = (IControllerCallBack) context;
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        LinearLayout ll;
-        RecyclerView rv;
-        ll = (LinearLayout) inflater.inflate(R.layout.rockstars_fragment, container, false);
-        rv = (RecyclerView) ll.findViewById(R.id.id_recyclerView_rockstars);
-        rv.setLayoutManager(new LinearLayoutManager(mContext));
-        rv.setAdapter(new RockStarsRecyclerViewAdapter(rockstarList, ctrl));
-        return ll;
+        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.rockstars_fragment, container, false);
+        //Recuperer le context auquel appartient ce fragment
+        mContext = getContext();
+        mController = (IActivityController) mContext;
+        //Register to the controller: the activity
+        mController.registerView(this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRockstarList = mController.getRockStarListFromModel();
+        mAdapter = new RockStarsRecyclerViewAdapter(mRockstarList);
+        mRecyclerView.setAdapter(mAdapter);
+        return mRecyclerView;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+    }
 
     @Override
-    public void update(List<Rockstar> aRockStarList) {
-        rockstarList = aRockStarList;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_rockstar_fragment,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.id_action_search:
+                SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+                searchView.setOnQueryTextListener(this);
+                MenuItemCompat.setOnActionExpandListener(item, new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        //Do something when expanded
+                        return true; //Return true to expand action view
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        //Do something when Collapsed
+                        mAdapter.updateAdaptedList(mRockstarList);
+                        return true;// Return true to collapse action view
+                    }
+                });
+                return true;
+            case R.id.id_refreshmenu:
+                LayoutInflater inflater =
+                        (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                //inflate the image image view refresh
+                ImageView iv = (ImageView) inflater.inflate(R.layout.imageview_refresh,null);
+                Animation rotate = AnimationUtils.loadAnimation(mContext,R.anim.rotate_refresh);
+                rotate.setRepeatCount(Animation.INFINITE);
+                iv.startAnimation(rotate);
+                item.setActionView(iv);
+                new RefreshList(item,mContext).execute();
+                return true;
+            default:
+                return  super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        List<Rockstar> filteredList = filter(mRockstarList, newText);
+        mAdapter.updateAdaptedList(filteredList);
+        return true;
+    }
+
+    /* The filtre is used on the firstname and lastname but not on status
+     *
+     * @param rockstarList
+     * @param newText
+     * @return
+     */
+    private List<Rockstar> filter(List<Rockstar> rockstarList, String newText) {
+        newText = newText.toLowerCase();
+        List<Rockstar> filteredList = new ArrayList<>();
+        for (Rockstar r: rockstarList){
+            String text = r.toString().toLowerCase();
+            if (text.contains(newText)){
+                filteredList.add(r);
+            }
+        }
+        return filteredList;
+    }
+
+    @Override
+    public void updateFragmentView(List<Rockstar> rockstars) {
+        mRockstarList = rockstars;
+        mAdapter.updateAdaptedList(mRockstarList);
+    }
+
+    private class RefreshList extends AsyncTask<Void, Void, Void> {
+
+        private MenuItem mItem;
+
+        private Context mContext;
+
+        public RefreshList(MenuItem item, Context ctx) {
+            mItem = item;
+            mContext = ctx;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mController.refresh();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (mItem.getActionView() != null){
+                mRockstarList = mController.getRockStarListFromModel();
+                mAdapter.updateAdaptedList(mRockstarList);
+                //Remove the animation
+                mItem.getActionView().clearAnimation();
+                mItem.setActionView(null);
+            }
+        }
     }
 }

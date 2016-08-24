@@ -26,7 +26,7 @@ public class Rockstar {
 
     private Bitmap photo;
 
-    private int bookmark;
+    private boolean bookmark;
 
     /**
      *Construcor
@@ -45,7 +45,7 @@ public class Rockstar {
         this.status = status;
         this.hisFace = hisFace;
         this.setPhoto(null);
-        this.bookmark = 1;
+        this.bookmark = true;
     }
 
     /**
@@ -101,7 +101,7 @@ public class Rockstar {
      * @return
      */
     public boolean isBookmark(){
-        return bookmark == 1;
+        return bookmark;
     }
 
     /**
@@ -110,13 +110,10 @@ public class Rockstar {
      *          false -> the rocksatr will be remove from it.
      */
     public void setBookmark(boolean b) {
-        if (b == true)
-            bookmark = 1;
-        else
-            bookmark = 0;
+        bookmark = b;
     }
     @Override
     public String toString(){
-        return firstName + " " + lastName;
+        return firstName + " " + lastName.toUpperCase();
     }
 }
