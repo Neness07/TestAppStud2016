@@ -29,8 +29,7 @@
             android:layout_width="210dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/button2"
-            android:layout_toStartOf="@+id/button2">
+            android:layout_centerHorizontal="true">
 
             <TextView
                 android:id="@+id/id_text_name"
@@ -50,15 +49,13 @@
                 android:paddingBottom="5dp"/>
         </LinearLayout>
 
-        <Button
-            android:layout_width="51dp"
-            android:layout_height="40dp"
-            android:text="SUP"
-            android:id="@+id/button2"
-            android:layout_alignParentBottom="true"
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_imageButton"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:background="@drawable/ic_delete_black_24dp"/>
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>

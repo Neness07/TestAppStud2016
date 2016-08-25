@@ -1,6 +1,7 @@
 package markeliny.ernesto.testappstud2016.model.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -8,52 +9,55 @@ import android.widget.TextView;
 
 import markeliny.ernesto.testappstud2016.R;
 import markeliny.ernesto.testappstud2016.model.Rockstar;
+import markeliny.ernesto.testappstud2016.view.FragmentView;
 
 /**
  * Created by Neness on 23/08/2016.
  */
 public class RockStarViewHolder extends RecyclerView.ViewHolder {
 
-    private ImageView imageView;
-    private TextView fullName;
-    private TextView status;
-    private CheckBox cb;
+    private FragmentView mFragment;
+    private Rockstar mRockStar;
 
-    public RockStarViewHolder(View itemView) {
+    private ImageView imageView;
+    private TextView fullNameView;
+    private TextView statusView;
+    private CheckBox checkBox;
+
+    public RockStarViewHolder(View itemView, final FragmentView fv) {
         super(itemView);
         imageView = (ImageView) itemView.findViewById(R.id.id_img_view);
-        fullName = (TextView) itemView.findViewById(R.id.id_text_name);
-        status = (TextView) itemView.findViewById(R.id.id_text_status);
-        cb = (CheckBox) itemView.findViewById(R.id.id_checkbox);
-    }
+        fullNameView = (TextView) itemView.findViewById(R.id.id_text_name);
+        statusView = (TextView) itemView.findViewById(R.id.id_text_status);
+        checkBox = (CheckBox) itemView.findViewById(R.id.id_checkbox);
+        mFragment = fv;
 
-    public void bind(Rockstar r){
-        imageView.setImageBitmap(r.getPhoto());
-        fullName.setText(r.toString());
-        status.setText(r.getStatus());
-        cb.setChecked(r.isBookmark());
-        cb.setTag(r);
-    }
-
-    public void setOnClickListener(){
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CheckBox cb = (CheckBox) view;
-                Rockstar rockstar = (Rockstar) cb.getTag();
-                //On peut faire quelque chose
-                //Ex: Agrandir l'image(plein ecran)
+                mFragment.getController().rockStarImageClicked(mRockStar);
             }
         });
-
-        cb.setOnClickListener(new View.OnClickListener() {
+        statusView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CheckBox cb = (CheckBox) view;
-                Rockstar rockstar = (Rockstar) cb.getTag();
-                //On peut faire quelque chose
-                //Ex: Add to or remove from bookmarks
+                mFragment.getController().rockStarStatusClicked(mRockStar);
             }
         });
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFragment.getController().rockStarCheckBoxCliked(mRockStar);
+            }
+        });
+    }
+
+    //bind this ViewHolder to the given rocksatr
+    public void bind(Rockstar r){
+        mRockStar = r;
+        imageView.setImageBitmap(mRockStar.getPhoto());
+        fullNameView.setText(mRockStar.toString());
+        statusView.setText(mRockStar.getStatus());
+        checkBox.setChecked(mRockStar.isBookmark());
     }
 }

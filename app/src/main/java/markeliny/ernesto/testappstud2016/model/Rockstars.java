@@ -73,7 +73,6 @@ public class Rockstars{
     public void addToBookmarks(Rockstar r){
         if (r != null){
             r.setBookmark(true);
-            notifyAllObservers();
         }
     }
 
@@ -84,7 +83,6 @@ public class Rockstars{
     public void removeFromBookmarks(Rockstar r){
         if (r != null){
             r.setBookmark(false);
-            notifyAllObservers();
         }
     }
     /*
@@ -94,5 +92,19 @@ public class Rockstars{
         for (ModelObserver o: observers) {
             o.rockstarsChanged(new RockstarsChangedEvent(this, rockstars));
         }
+    }
+
+    public boolean contains(Rockstar aRockStar) {
+        return rockstars.contains(aRockStar);
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof Rockstars){
+            Rockstars others = (Rockstars) o;
+            return others.getRockstars().size() == rockstars.size() &&
+                    rockstars.containsAll(others.getRockstars());
+        }
+        return false;
     }
 }

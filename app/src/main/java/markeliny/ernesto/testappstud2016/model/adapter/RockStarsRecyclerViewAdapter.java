@@ -11,29 +11,33 @@ import java.util.List;
 import markeliny.ernesto.testappstud2016.R;
 import markeliny.ernesto.testappstud2016.control.IActivityController;
 import markeliny.ernesto.testappstud2016.model.Rockstar;
+import markeliny.ernesto.testappstud2016.view.FragmentView;
 
 /**
  * Created by Neness on 23/08/2016.
  */
 public class RockStarsRecyclerViewAdapter extends RecyclerView.Adapter<RockStarViewHolder> {
 
-    List<Rockstar> mRockstars;
+    private List<Rockstar> mRockstars;
 
-    public RockStarsRecyclerViewAdapter(List<Rockstar> rockstars) {
+    private final FragmentView mFragment;
+
+
+    public RockStarsRecyclerViewAdapter(List<Rockstar> rockstars, final FragmentView fv) {
         mRockstars = rockstars;
+        mFragment = fv;
     }
 
     @Override
     public RockStarViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView cv = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.rockstars_item,parent,false);
-        return new RockStarViewHolder(cv);
+        return new RockStarViewHolder(cv,mFragment);
     }
 
     @Override
     public void onBindViewHolder(RockStarViewHolder holder, int position) {
         holder.bind(mRockstars.get(position));
-        holder.setOnClickListener();
     }
 
     @Override

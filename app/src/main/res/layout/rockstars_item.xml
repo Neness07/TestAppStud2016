@@ -24,7 +24,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@color/colorPrimary"
-            android:clickable="true" />
+            android:clickable="false" />
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="210dp"

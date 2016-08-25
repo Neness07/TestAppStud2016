@@ -3,5 +3,6 @@
     <string name="add_to_bookmarks"> Add to bookmarks</string>
     <string name="action_search">search</string>
     <string name="refresh_menu">refresh menu</string>
+    <string name="menu_profie">Validate profile</string>
 
 </resources>

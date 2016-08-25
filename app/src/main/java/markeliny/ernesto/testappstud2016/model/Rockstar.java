@@ -45,7 +45,7 @@ public class Rockstar {
         this.status = status;
         this.hisFace = hisFace;
         this.setPhoto(null);
-        this.bookmark = true;
+        this.bookmark = false;
     }
 
     /**
@@ -112,8 +112,26 @@ public class Rockstar {
     public void setBookmark(boolean b) {
         bookmark = b;
     }
+
     @Override
     public String toString(){
         return firstName + " " + lastName.toUpperCase();
+    }
+
+    /**
+     *
+     * @param status
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof Rockstar){
+            Rockstar r = (Rockstar) o;
+            return this.firstName.equals(r.getFirstName()) && this.lastName.equals(r.getLastName());
+        }
+        return false;
     }
 }

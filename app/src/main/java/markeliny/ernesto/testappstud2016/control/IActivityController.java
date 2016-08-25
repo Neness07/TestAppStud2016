@@ -1,5 +1,7 @@
 package markeliny.ernesto.testappstud2016.control;
 
+import android.widget.ImageView;
+
 import java.util.List;
 
 import markeliny.ernesto.testappstud2016.model.Rockstar;
@@ -18,14 +20,37 @@ public interface IActivityController {
     public List<Rockstar> getRockStarListFromModel();
 
     /**
-     * This method should download a new list from the server and update the model
-     * So bear in mind that this method must be called in other thread than UI thread.
+     * Obtain a new list from the singleton
      */
     public void refresh();
 
     /**
      * Register a fragment as a view in this controller
-     * @param fv
+     * @param fv the fragment view to register
      */
     public void registerView(FragmentView fv);
+
+    /**
+     * Specify the action to do when the user clicks on the rockstar's image
+     * @param aRockStar aRockStar The rock star on which the user clicked on his image
+     */
+    void rockStarImageClicked(Rockstar aRockStar);
+
+    /**
+     * Specify the action to do when the user clicks on the rockstar's check box
+     * @param aRockStar aRockStar The rock star on which the user clicked on his check box
+     */
+    void rockStarCheckBoxCliked(Rockstar aRockStar);
+
+    /**
+     * Specify the action to do when the user clicks on the rockstar's status
+     * @param aRockStar The rock star on which the user clicked on his status
+     */
+    void rockStarStatusClicked(Rockstar aRockStar);
+
+    /**
+     * Delete a rock star from the book marks
+     * @param aRockStar the rock star to delete
+     */
+    void deleteFromBookMarks(Rockstar aRockStar);
 }

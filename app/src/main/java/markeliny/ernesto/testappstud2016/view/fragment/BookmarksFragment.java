@@ -42,7 +42,7 @@ public class BookmarksFragment extends Fragment implements FragmentView {
         mRecyclerView = (RecyclerView) inflater.inflate(R.layout.bookmarks_fragment, container, false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRockstarList = mController.getRockStarListFromModel();
-        mAdapter = new BookMarksRecyclerViewAdapter(this.getBookMarks());
+        mAdapter = new BookMarksRecyclerViewAdapter(this.getBookMarks(), this);
         mRecyclerView.setAdapter(mAdapter);
         return mRecyclerView;
     }
@@ -51,6 +51,11 @@ public class BookmarksFragment extends Fragment implements FragmentView {
     public void updateFragmentView(List<Rockstar> rockstars) {
         mRockstarList = rockstars;
         mAdapter.updateAdaptedList(this.getBookMarks());
+    }
+
+    @Override
+    public IActivityController getController() {
+        return mController;
     }
 
     private List<Rockstar> getBookMarks(){

@@ -19,11 +19,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import markeliny.ernesto.testappstud2016.R;
 import markeliny.ernesto.testappstud2016.control.IActivityController;
+import markeliny.ernesto.testappstud2016.control.RockstarsSingleton;
 import markeliny.ernesto.testappstud2016.model.Rockstar;
 import markeliny.ernesto.testappstud2016.model.adapter.RockStarsRecyclerViewAdapter;
 import markeliny.ernesto.testappstud2016.view.FragmentView;
@@ -52,7 +54,7 @@ public class RockstarsFragment extends Fragment implements SearchView.OnQueryTex
         mController.registerView(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRockstarList = mController.getRockStarListFromModel();
-        mAdapter = new RockStarsRecyclerViewAdapter(mRockstarList);
+        mAdapter = new RockStarsRecyclerViewAdapter(mRockstarList,this);
         mRecyclerView.setAdapter(mAdapter);
         return mRecyclerView;
     }
@@ -97,12 +99,13 @@ public class RockstarsFragment extends Fragment implements SearchView.OnQueryTex
                 rotate.setRepeatCount(Animation.INFINITE);
                 iv.startAnimation(rotate);
                 item.setActionView(iv);
-                new RefreshList(item,mContext).execute();
+                new RefreshList(item).execute();
                 return true;
             default:
                 return  super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -139,28 +142,34 @@ public class RockstarsFragment extends Fragment implements SearchView.OnQueryTex
         mAdapter.updateAdaptedList(mRockstarList);
     }
 
+    @Override
+    public IActivityController getController() {
+        return mController;
+    }
+
     private class RefreshList extends AsyncTask<Void, Void, Void> {
 
         private MenuItem mItem;
 
-        private Context mContext;
-
-        public RefreshList(MenuItem item, Context ctx) {
+        public RefreshList(MenuItem item) {
             mItem = item;
-            mContext = ctx;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            mController.refresh();
+            try {
+                RockstarsSingleton.getInstance().download();
+            } catch (IOException e) {
+                e.printStackTrace();
+                ///TODO
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
             if (mItem.getActionView() != null){
-                mRockstarList = mController.getRockStarListFromModel();
-                mAdapter.updateAdaptedList(mRockstarList);
+                mController.refresh();
                 //Remove the animation
                 mItem.getActionView().clearAnimation();
                 mItem.setActionView(null);
