@@ -4,5 +4,7 @@
     <string name="action_search">search</string>
     <string name="refresh_menu">refresh menu</string>
     <string name="menu_profie">Validate profile</string>
+    <string name="profile_name_txtview">Name:</string>
+    <string name="profile_firstname_txtview">First Name:</string>
 
 </resources>

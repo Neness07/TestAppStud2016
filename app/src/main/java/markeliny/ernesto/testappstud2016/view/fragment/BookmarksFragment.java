@@ -14,22 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import markeliny.ernesto.testappstud2016.R;
-import markeliny.ernesto.testappstud2016.control.IActivityController;
-import markeliny.ernesto.testappstud2016.control.RockstarsSingleton;
+import markeliny.ernesto.testappstud2016.control.RockstarsBookmarksController;
 import markeliny.ernesto.testappstud2016.model.Rockstar;
-import markeliny.ernesto.testappstud2016.model.adapter.BookMarksRecyclerViewAdapter;
-import markeliny.ernesto.testappstud2016.view.FragmentView;
+import markeliny.ernesto.testappstud2016.adapter.BookMarksRecyclerViewAdapter;
+import markeliny.ernesto.testappstud2016.view.RockstarsBookmarksView;
 
 
 /**
  * Created by Neness on 22/08/2016.
  */
-public class BookmarksFragment extends Fragment implements FragmentView {
+public class BookmarksFragment extends Fragment implements RockstarsBookmarksView {
 
     protected Context mContext;
     protected RecyclerView mRecyclerView;
     protected List<Rockstar> mRockstarList;
-    protected IActivityController mController;
+    protected RockstarsBookmarksController mController;
     private BookMarksRecyclerViewAdapter mAdapter;
 
     public BookmarksFragment() {}
@@ -37,25 +36,20 @@ public class BookmarksFragment extends Fragment implements FragmentView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getContext();
-        mController = (IActivityController) mContext;
+        mController = (RockstarsBookmarksController) mContext;
         mController.registerView(this);
         mRecyclerView = (RecyclerView) inflater.inflate(R.layout.bookmarks_fragment, container, false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRockstarList = mController.getRockStarListFromModel();
-        mAdapter = new BookMarksRecyclerViewAdapter(this.getBookMarks(), this);
+        mAdapter = new BookMarksRecyclerViewAdapter(this.getBookMarks(), mController);
         mRecyclerView.setAdapter(mAdapter);
         return mRecyclerView;
     }
 
     @Override
-    public void updateFragmentView(List<Rockstar> rockstars) {
+    public void updateRockstarsBookmarksView(List<Rockstar> rockstars) {
         mRockstarList = rockstars;
         mAdapter.updateAdaptedList(this.getBookMarks());
-    }
-
-    @Override
-    public IActivityController getController() {
-        return mController;
     }
 
     private List<Rockstar> getBookMarks(){

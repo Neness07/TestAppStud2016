@@ -11,16 +11,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.net.URL;
 
 import markeliny.ernesto.testappstud2016.R;
+import markeliny.ernesto.testappstud2016.database.IDBManager;
+import markeliny.ernesto.testappstud2016.database.MySQLiteDatabaseManager;
+import markeliny.ernesto.testappstud2016.util.UtilitiesSingleton;
 
 public class SplashScreenActivity extends AppCompatActivity {
+
+    private static final String URL_JSON = "http://54.72.181.8/yolo/contacts.json";
+
+    private UtilitiesSingleton uSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
         //Checking internet connection
         ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -28,8 +35,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             new DownloadData().execute();
         } else {
             //Toast de test
-            Toast.makeText(SplashScreenActivity.this, "Pas de connexion internet. Assurez vous" +
-                    " d'avoir une connexion internet avant de lancer l'application",
+            Toast.makeText(SplashScreenActivity.this, "Pas de connexion internet.",
                     Toast.LENGTH_LONG).show();
         }
     }
@@ -49,9 +55,15 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            RockstarsSingleton rsc = null;
             try {
-                RockstarsSingleton.getInstance().download();
+                URL url = new URL(URL_JSON);
+                IDBManager dbm = new MySQLiteDatabaseManager(SplashScreenActivity.this);
+                UtilitiesSingleton.initializeInstance(url,dbm);
+                UtilitiesSingleton.getInstance().downloadFromDatabase();
+                if(UtilitiesSingleton.getInstance().getRockStarsList() == null
+                        || UtilitiesSingleton.getInstance().getRockStarsList().size() == 0){
+                    UtilitiesSingleton.getInstance().downloadFromJSON();
+                }
             } catch (IOException e) {
                 if (pDialog.isShowing()) {
                     pDialog.dismiss();
@@ -67,11 +79,12 @@ public class SplashScreenActivity extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
-            if (RockstarsSingleton.getInstance().getRockStarsList() != null) {
+            if (UtilitiesSingleton.getInstance().getRockStarsList() != null) {
                 Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
                 startActivity(i);
             } else {
-                Toast.makeText(SplashScreenActivity.this, "liste vide", Toast.LENGTH_LONG).show();
+                Toast.makeText(SplashScreenActivity.this, "Un problème est survenu. Accès reseau",
+                        Toast.LENGTH_LONG).show();
             }
             finish();
         }

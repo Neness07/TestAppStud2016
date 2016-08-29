@@ -3,6 +3,7 @@ package markeliny.ernesto.testappstud2016.view.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import markeliny.ernesto.testappstud2016.R;
 
@@ -25,7 +28,10 @@ import markeliny.ernesto.testappstud2016.R;
  */
 public class ProfileFragment extends Fragment {
 
-    LinearLayout ll;
+    private ImageView mImageView;
+    private EditText firstName;
+    private EditText lastName;
+    private FloatingActionButton fab;
 
     public ProfileFragment() {
 
@@ -33,9 +39,18 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ll = (LinearLayout) inflater.inflate(R.layout.profile_fragment, container, false);
-
-        return ll;
+        View v = inflater.inflate(R.layout.profile_fragment, container, false);
+        mImageView = (ImageView) v.findViewById(R.id.id_img_view_profile);
+        firstName = (EditText) v.findViewById(R.id.id_editText_first_name);
+        lastName = (EditText) v.findViewById(R.id.id_editText_name);
+        fab = (FloatingActionButton) v.findViewById(R.id.id_FAB);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ///TODO open camera intent
+            }
+        });
+        return v;
     }
 
     @Override
@@ -53,6 +68,7 @@ public class ProfileFragment extends Fragment {
         switch (item.getItemId()){
             case R.id.id_action_search:
                 ///TODO validate profile
+                return true;
             default:
                 return  super.onOptionsItemSelected(item);
         }

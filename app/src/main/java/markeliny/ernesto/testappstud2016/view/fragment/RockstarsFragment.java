@@ -24,22 +24,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import markeliny.ernesto.testappstud2016.R;
-import markeliny.ernesto.testappstud2016.control.IActivityController;
-import markeliny.ernesto.testappstud2016.control.RockstarsSingleton;
+import markeliny.ernesto.testappstud2016.control.RockstarsBookmarksController;
+import markeliny.ernesto.testappstud2016.util.UtilitiesSingleton;
 import markeliny.ernesto.testappstud2016.model.Rockstar;
-import markeliny.ernesto.testappstud2016.model.adapter.RockStarsRecyclerViewAdapter;
-import markeliny.ernesto.testappstud2016.view.FragmentView;
+import markeliny.ernesto.testappstud2016.adapter.RockStarsRecyclerViewAdapter;
+import markeliny.ernesto.testappstud2016.view.RockstarsBookmarksView;
 
 /**
  * Created by Neness on 22/08/2016.
  */
 public class RockstarsFragment extends Fragment implements SearchView.OnQueryTextListener,
-        FragmentView{
+        RockstarsBookmarksView {
 
     protected Context mContext;
     protected RecyclerView mRecyclerView;
     protected List<Rockstar> mRockstarList;
-    protected IActivityController mController;
+    protected RockstarsBookmarksController mController;
     private RockStarsRecyclerViewAdapter mAdapter;
 
     public RockstarsFragment() {}
@@ -49,12 +49,12 @@ public class RockstarsFragment extends Fragment implements SearchView.OnQueryTex
         mRecyclerView = (RecyclerView) inflater.inflate(R.layout.rockstars_fragment, container, false);
         //Recuperer le context auquel appartient ce fragment
         mContext = getContext();
-        mController = (IActivityController) mContext;
+        mController = (RockstarsBookmarksController) mContext;
         //Register to the controller: the activity
         mController.registerView(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRockstarList = mController.getRockStarListFromModel();
-        mAdapter = new RockStarsRecyclerViewAdapter(mRockstarList,this);
+        mAdapter = new RockStarsRecyclerViewAdapter(mRockstarList,mController);
         mRecyclerView.setAdapter(mAdapter);
         return mRecyclerView;
     }
@@ -94,7 +94,7 @@ public class RockstarsFragment extends Fragment implements SearchView.OnQueryTex
                 LayoutInflater inflater =
                         (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 //inflate the image image view refresh
-                ImageView iv = (ImageView) inflater.inflate(R.layout.imageview_refresh,null);
+                ImageView iv = (ImageView) inflater.inflate(R.layout.imageview_refresh_button,null);
                 Animation rotate = AnimationUtils.loadAnimation(mContext,R.anim.rotate_refresh);
                 rotate.setRepeatCount(Animation.INFINITE);
                 iv.startAnimation(rotate);
@@ -137,14 +137,9 @@ public class RockstarsFragment extends Fragment implements SearchView.OnQueryTex
     }
 
     @Override
-    public void updateFragmentView(List<Rockstar> rockstars) {
+    public void updateRockstarsBookmarksView(List<Rockstar> rockstars) {
         mRockstarList = rockstars;
         mAdapter.updateAdaptedList(mRockstarList);
-    }
-
-    @Override
-    public IActivityController getController() {
-        return mController;
     }
 
     private class RefreshList extends AsyncTask<Void, Void, Void> {
@@ -158,7 +153,7 @@ public class RockstarsFragment extends Fragment implements SearchView.OnQueryTex
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                RockstarsSingleton.getInstance().download();
+                UtilitiesSingleton.getInstance().downloadFromJSON();
             } catch (IOException e) {
                 e.printStackTrace();
                 ///TODO

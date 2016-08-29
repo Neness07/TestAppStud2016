@@ -3,6 +3,7 @@ package markeliny.ernesto.testappstud2016.model;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -24,7 +25,7 @@ public class Rockstar {
 
     private String hisFace;
 
-    private Bitmap photo;
+    private Bitmap photo = null;
 
     private boolean bookmark;
 
@@ -35,8 +36,8 @@ public class Rockstar {
      * @param status the status of this Rockstar
      * @param hisFace the file name of the photo of this rock star
      */
-    public Rockstar(@JsonProperty("firstname")String firstName,
-                    @JsonProperty("lastname")String lastName,
+    public Rockstar(@NonNull@JsonProperty("firstname")String firstName,
+                    @NonNull@JsonProperty("lastname")String lastName,
                     @JsonProperty("status")String status,
                     @JsonProperty("hisface")String hisFace)
     {
@@ -50,7 +51,7 @@ public class Rockstar {
 
     /**
      *
-     * @return
+     * @return the first name of this rock star
      */
     public String getFirstName() {
         return firstName;
@@ -58,7 +59,7 @@ public class Rockstar {
 
     /**
      *
-     * @return
+     * @return the last name of this rock star
      */
     public String getLastName() {
         return lastName;
@@ -66,7 +67,7 @@ public class Rockstar {
 
     /**
      *
-     * @return
+     * @return the current status of this roch star if it's set, null
      */
     public String getStatus() {
         return status;
@@ -74,7 +75,7 @@ public class Rockstar {
 
     /**
      *
-     * @return
+     * @return the picture's file name of this rock star
      */
     public String getHisFace() {
         return hisFace;
@@ -82,14 +83,14 @@ public class Rockstar {
 
     /**
      *
-     * @return the picture of this Rockstar
+     * @return the picture of this Rockstar it is set
      */
     public Bitmap getPhoto() {
         return photo;
     }
 
     /**
-     * It allows to change the picture
+     * It allows to change the picture of this rock star if the is one, null otherwise
      * @param photo
      */
     public void setPhoto(Bitmap photo) {
@@ -98,7 +99,7 @@ public class Rockstar {
 
     /**
      * Test if this rockstar belongs to the bookmark list of the user
-     * @return
+     * @return true if this rock star is a favorite, false otherwise
      */
     public boolean isBookmark(){
         return bookmark;
@@ -119,8 +120,8 @@ public class Rockstar {
     }
 
     /**
-     *
-     * @param status
+     * To change the status of this rock star
+     * @param status the new status to set
      */
     public void setStatus(String status) {
         this.status = status;
